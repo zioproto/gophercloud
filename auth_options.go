@@ -223,9 +223,10 @@ func (opts *AuthOptions) ToTokenV3CreateMap(scope map[string]interface{}) (map[s
 			}
 		} else if opts.ApplicationCredentialName != "" {
 			req.Auth.Identity.Methods = []string{"application_credential"}
+			var userRequest = userReq{Name: &opts.Username, Domain: &domainReq{Name: &opts.DomainName, ID: &opts.DomainID}}
 			req.Auth.Identity.ApplicationCredential = &applicationCredentialReq{
 				Name:   &opts.ApplicationCredentialName,
-				User:   &userReq{Name: &opts.Username, Domain: &domainReq{Name: &opts.DomainName, ID: &opts.DomainID}},
+				User:   userRequest,
 				Secret: &opts.ApplicationCredentialSecret,
 			}
 		} else {
