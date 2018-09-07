@@ -185,6 +185,7 @@ func (opts *AuthOptions) ToTokenV3CreateMap(scope map[string]interface{}) (map[s
 	// Populate the request structure based on the provided arguments. Create and return an error
 	// if insufficient or incompatible information is present.
 	var req request
+	var userRequest userReq
 
 	if opts.Password == "" {
 		if opts.TokenID != "" {
@@ -223,10 +224,16 @@ func (opts *AuthOptions) ToTokenV3CreateMap(scope map[string]interface{}) (map[s
 			}
 		} else if opts.ApplicationCredentialName != "" {
 			req.Auth.Identity.Methods = []string{"application_credential"}
-			var userRequest = userReq{Name: &opts.Username, Domain: &domainReq{Name: &opts.DomainName, ID: &opts.DomainID}}
+			if opts.DomainID != "" {
+				userRequest = userReq{Name: &opts.Username, Domain: &domainReq{ID: &opts.DomainID}}
+			} else if opts.DomainName != "" {
+				userRequest = userReq{Name: &opts.Username, Domain: &domainReq{Name: &opts.DomainName}}
+			} else {
+				userRequest = userReq{Name: &opts.Username}
+			}
 			req.Auth.Identity.ApplicationCredential = &applicationCredentialReq{
 				Name:   &opts.ApplicationCredentialName,
-				User:   userRequest,
+				User:   &userRequest,
 				Secret: &opts.ApplicationCredentialSecret,
 			}
 		} else {
