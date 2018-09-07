@@ -148,7 +148,7 @@ func (opts *AuthOptions) ToTokenV3CreateMap(scope map[string]interface{}) (map[s
 	type userReq struct {
 		ID       *string    `json:"id,omitempty"`
 		Name     *string    `json:"name,omitempty"`
-		Password string     `json:"password"`
+		Password string     `json:"password,omitempty"`
 		Domain   *domainReq `json:"domain,omitempty"`
 	}
 
